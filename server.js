@@ -1,17 +1,26 @@
 const express = require('express');
-
 const mongodb = require('./data/database');
-const app = express();
+const swaggerUi = require('swagger-ui-express');
+const swaggerFile = require('./swagger-output.json');
 
+const app = express();
 const port = process.env.PORT || 3000;
 
+// Middleware to parse JSON
+app.use(express.json());
+
+// Swagger setup
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
+
+// Routes
 app.use('/', require('./routes'));
 
-mongodb.initDb((err) =>{
-    if(err) {
-        console.log(err);
-    }
-    else {
-        app.listen(port, () =>{console.log(`Database is litening and node Running on port ${port}`)})
-    }
-})
+mongodb.initDb((err) => {
+  if (err) {
+    console.log(err);
+  } else {
+    app.listen(port, () => {
+      console.log(`✅ Database is listening and Node running on port ${port}`);
+    });
+  }
+});

@@ -2,23 +2,93 @@ const mongodb = require('../data/database');
 const ObjectId = require('mongodb').ObjectId;
 
 const getAll = async (req, res) => {
-    const result = await mongodb.getDatabase().db('prject1').collection('users').find();
-    result.toArray().then((users) =>{
-        res.setHeader('Content-Type', 'application/json');
-        res.status(200).json(users)
-    });
+  const result = await mongodb.getDatabase().db('prject1').collection('users').find();
+  result.toArray().then((users) => {
+    res.setHeader('Content-Type', 'application/json');
+    res.status(200).json(users);
+  });
 };
 
-const getSingle = async (req, res) =>{
-    const userId = new ObjectId(req.params.id);
-    const result = await mongodb.getDatabase().db('prject1').collection('users').find({_id: userId});
-    result.toArray().then((users) =>{
-        res.setHeader('Content-Type', 'application/json');
-        res.status(200).json(users[0])
-    });
+const getSingle = async (req, res) => {
+  const userId = new ObjectId(req.params.id);
+  const result = await mongodb
+    .getDatabase()
+    .db('prject1')
+    .collection('users')
+    .find({ _id: userId });
+  result.toArray().then((users) => {
+    res.setHeader('Content-Type', 'application/json');
+    res.status(200).json(users[0]);
+  });
+};
+
+// POST - create a new user
+const createUser = async (req, res) => {
+  const user = {
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    email: req.body.email,
+    favoriteColor: req.body.favoriteColor,
+    birthday: req.body.birthday
+  };
+
+  const response = await mongodb
+    .getDatabase()
+    .db('prject1')
+    .collection('users')
+    .insertOne(user);
+
+  if (response.acknowledged) {
+    res.status(201).json({ id: response.insertedId });
+  } else {
+    res.status(500).json(response.error || 'An error occurred while creating the user.');
+  }
+};
+
+// PUT - update a user
+const updateUser = async (req, res) => {
+  const userId = new ObjectId(req.params.id);
+  const user = {
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    email: req.body.email,
+    favoriteColor: req.body.favoriteColor,
+    birthday: req.body.birthday
+  };
+
+  const response = await mongodb
+    .getDatabase()
+    .db('prject1')
+    .collection('users')
+    .replaceOne({ _id: userId }, user);
+
+  if (response.modifiedCount > 0) {
+    res.status(204).send(); // 204 means "No Content", successful update
+  } else {
+    res.status(500).json(response.error || 'An error occurred while updating the user.');
+  }
+};
+
+// DELETE - remove a user
+const deleteUser = async (req, res) => {
+  const userId = new ObjectId(req.params.id);
+  const response = await mongodb
+    .getDatabase()
+    .db('prject1')
+    .collection('users')
+    .deleteOne({ _id: userId });
+
+  if (response.deletedCount > 0) {
+    res.status(204).send();
+  } else {
+    res.status(500).json(response.error || 'An error occurred while deleting the user.');
+  }
 };
 
 module.exports = {
-    getAll,
-    getSingle
+  getAll,
+  getSingle,
+  createUser,
+  updateUser,
+  deleteUser
 };
