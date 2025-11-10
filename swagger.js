@@ -7,9 +7,9 @@ const doc = {
       'API documentation for the Contacts project (BYU-Pathway W02). This API allows creating, reading, updating, and deleting contacts stored in MongoDB.',
     version: '1.0.0',
   },
-  host: 'localhost:3000',
-  schemes: ['http'],
-  basePath: '/users',
+  host: 'https://project1-cse341-0kkg.onrender.com',
+  schemes: ['https'],
+  basePath: '/',
   consumes: ['application/json'],
   produces: ['application/json'],
   definitions: {

@@ -14,7 +14,6 @@ app.use(cors({
   allowedHeaders: ['Content-Type']
 }));
 
-
 // Middleware to parse JSON
 app.use(express.json());
 
@@ -29,7 +28,7 @@ mongodb.initDb((err) => {
     console.log(err);
   } else {
     app.listen(port, () => {
-      console.log(`✅ Database is listening and Node running on port ${port}`);
+      console.log(`Database is listening and Node running on port ${port}`);
     });
   }
 });
