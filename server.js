@@ -8,7 +8,12 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // CORS
-app.use(cors());
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type']
+}));
+
 
 // Middleware to parse JSON
 app.use(express.json());
