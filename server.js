@@ -1,10 +1,14 @@
 const express = require('express');
+const cors = require('cors');
 const mongodb = require('./data/database');
 const swaggerUi = require('swagger-ui-express');
 const swaggerFile = require('./swagger-output.json');
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+// CORS
+app.use(cors());
 
 // Middleware to parse JSON
 app.use(express.json());
